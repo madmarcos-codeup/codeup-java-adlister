@@ -1,5 +1,10 @@
 package com.codeup.adlister.controllers;
 
+import com.codeup.adlister.dao.Ads;
+import com.codeup.adlister.dao.DaoFactory;
+import com.codeup.adlister.dao.ListAdsDao;
+import com.codeup.adlister.dao.MySQLAdsDao;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +26,14 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         boolean validAttempt = username.equals("admin") && password.equals("password");
+
+        Ads dao = DaoFactory.getAdsDao();
+        MySQLAdsDao dbDao = (MySQLAdsDao) dao;
+        System.out.println("dao valid login attempt? "
+                + dbDao.isValidLogin(username, password));
+
+        System.out.println("dao BETTER valid login attempt? "
+                + dbDao.isValidLoginBetter(username, password));
 
         if (validAttempt) {
             request.getSession().setAttribute("user", username);

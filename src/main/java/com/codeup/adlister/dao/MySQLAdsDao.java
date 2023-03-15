@@ -1,5 +1,6 @@
 package com.codeup.adlister.dao;
 
+import com.codeup.adlister.config.Config;
 import com.codeup.adlister.models.Ad;
 import com.mysql.cj.jdbc.Driver;
 
@@ -74,4 +75,52 @@ public class MySQLAdsDao implements Ads {
         }
         return ads;
     }
+
+    public boolean isValidLogin(String userName, String password) {
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT count(id) as count_id " +
+                    " FROM users " +
+                    " where name = '" + userName + "' " +
+                    " and password = '" + password + "'");
+            if(!rs.next()) {
+                return false;
+            }
+            if(rs.getInt("count_id") > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving all ads.", e);
+        }
+    }
+
+    public boolean isValidLoginBetter(String userName, String password) {
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement("SELECT count(id) as count_id " +
+                    " FROM users " +
+                    " where name = ? " +
+                    " and password = ? ");
+            stmt.setString(1, userName);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+            if(!rs.next()) {
+                return false;
+            }
+            if(rs.getInt("count_id") > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving all ads.", e);
+        }
+    }
+
 }
