@@ -31,11 +31,12 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        boolean validAttempt = password.equals(user.getPassword());
+        // Change your login logic to check against users' hashed passwords
+        boolean validAttempt = Password.check(password, user.getPassword());
 
-        String hash = Password.hash(password);
-        boolean hashOk = Password.check(password, hash);
-        System.out.println("Hashok? " + hashOk);
+//        String hash = Password.hash(password);
+//        boolean hashOk =
+//        System.out.println("Hashok? " + hashOk);
 
         if (validAttempt) {
             request.getSession().setAttribute("user", user);
